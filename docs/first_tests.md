@@ -23,6 +23,7 @@ SELECT CONCAT("http://ensembl.org/", gdb.name, "/Gene/Summary?db=core;g=", gm.st
 LEFT JOIN homology_member hm ON h.homology_id = hm.homology_id LEFT JOIN gene_member gm ON hm.gene_member_id = gm.gene_member_id LEFT JOIN genome_db gdb ON gdb.genome_db_id = gm.genome_db_id WHERE ml.type = "ENSEMBL_ORTHOLOGUES" AND h.description = "ortholog_one2one" AND gd.assembly = "GRCh38" AND h.is_high_confidence = 1 AND mlss.name = "Hsap-Ptro orthologues" LIMIT 20;
 ```
 | URL                                                                          | stable_id          | biotype_group | display_label | perc_cov | perc_id | perc_pos |
+|------------------------------------------------------------------------------|--------------------|---------------|---------------|----------|---------|----------|
 | http://ensembl.org/pan_troglodytes/Gene/Summary?db=core;g=ENSPTRG00000000771 | ENSPTRG00000000771 | coding        | ACOT11        |      100 | 98.8468 |  99.1763 |
 | http://ensembl.org/homo_sapiens/Gene/Summary?db=core;g=ENSG00000162390       | ENSG00000162390    | coding        | ACOT11        |      100 | 98.8468 |  99.1763 |
 | http://ensembl.org/pan_troglodytes/Gene/Summary?db=core;g=ENSPTRG00000013732 | ENSPTRG00000013732 | coding        | NKAIN4        |      100 | 96.6346 |  98.0769 |
@@ -50,6 +51,7 @@ SELECT CONCAT("http://ensembl.org/", gdb.name, "/Gene/Summary?db=core;g=", gm.st
 LEFT JOIN homology_member hm ON h.homology_id = hm.homology_id LEFT JOIN gene_member gm ON hm.gene_member_id = gm.gene_member_id LEFT JOIN genome_db gdb ON gdb.genome_db_id = gm.genome_db_id WHERE ml.type = "ENSEMBL_ORTHOLOGUES" AND h.description = "ortholog_one2one" AND gd.assembly = "GRCh38" AND h.is_high_confidence = 1 AND mlss.name = "Hsap-Ocun orthologues" LIMIT 20;
 ```
 | URL                                                                                | stable_id          | biotype_group | display_label | perc_cov | perc_id | perc_pos |
+|------------------------------------------------------------------------------------|--------------------|---------------|---------------|----------|---------|----------|
 | http://ensembl.org/oryctolagus_cuniculus/Gene/Summary?db=core;g=ENSOCUG00000008092 | ENSOCUG00000008092 | coding        | ACOT11        |  98.6555 | 87.2269 |  90.9244 |
 | http://ensembl.org/homo_sapiens/Gene/Summary?db=core;g=ENSG00000162390             | ENSG00000162390    | coding        | ACOT11        |  96.7051 | 85.5025 |  89.1269 |
 | http://ensembl.org/oryctolagus_cuniculus/Gene/Summary?db=core;g=ENSOCUG00000024520 | ENSOCUG00000024520 | coding        | RGS8          |  87.3684 | 62.6316 |  68.4211 |
@@ -94,12 +96,12 @@ SRFS3 is problematic in chimpanzee because the 3' gene is LAP3 which is a pseudo
 ## Retrieving the genome sequence
 
 ### Chimpanzee
-```
+```bash
 perl $ENSCODE/ensembl-analysis/scripts/sequence_dump.pl $(mysql-ens-mirror-1 details -script_db) -dbname pan_troglodytes_core_101_3 -toplevel -onefile -filename <mypath>/chimpanzee_softmasked.fa -mask -softmask -mask_repeat dust -mask_repeat repeatmask_repbase_primates -coord_system_name Pan_tro_3.0
 ```
 
 ### Rabbit
-```
+```bash
 perl $ENSCODE/ensembl-analysis/scripts/sequence_dump.pl $(mysql-ens-mirror-1 details -script_db) -dbname oryctolagus_cuniculus_core_101_2 -toplevel -onefile -filename <mypath>/rabbit_softmasked.fa -mask -softmask -mask_repeat dust -mask_repeat repeatmask -coord_system_name OryCun2.0
 ```
 
@@ -112,11 +114,11 @@ It is possible to run BLAST on ensembl.org and has the advantage of being able t
 It should be easy to run BLAST on the cluster and to tweak parameters
 1. Index the genome file
 This would only be done once for each genome
-```
+```bash
 bsub -M2000 -R"select[mem>2000] rusage[mem=2000]" -oo <mypath>/blast.log -eo <mypath>/blast.err convert2blastmask -in <mypath>/chimpanzee_softmasked.fa -parse_seqids -masking_algorithm repeatmasker -masking_options "repeatmasker, default" -outfmt maskinfo_asn1_bin -out <mypath>/chimpanzee_softmasked.fa.asnb
 bsub -M2000 -R"select[mem>2000] rusage[mem=2000]" -oo <mypath>/blast.log -eo <mypath>/blast.err makeblastdb -in <mypath>/chimpanzee_softmasked.fa -dbtype nucl -parse_seqids -mask_data <mypath>/chimpanzee_softmasked.fa.asnb -title "chimpanzee" 
 ```
 2. Run a blast command
-```
+```bash
 bsub -M2000 -n 4 -R"select[mem>2000] rusage[mem=2000] span[hosts=1]" -oo <mypath>/blast.log -eo <mypath>/blast.err tblastn -db <mypath>/chimpanzee_softmasked.fa -query <mypath>/<protein>.fa -num_threads 4 -db_soft_mask repeatmasker
 ```
