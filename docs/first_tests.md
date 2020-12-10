@@ -18,7 +18,7 @@ We will use the Ensembl compara database for release 101 to fetch 10 one to one 
 We only select high confidence genes.
 
 ### Human-Chimpanzee
-```
+```mysql
 SELECT CONCAT("http://ensembl.org/", gdb.name, "/Gene/Summary?db=core;g=", gm.stable_id) AS URL, gm.stable_id, gm.biotype_group, gm.display_label, hm.perc_cov, hm.perc_id, hm.perc_pos FROM method_link ml LEFT JOIN method_link_species_set mlss ON ml.method_link_id = mlss.method_link_id LEFT JOIN homology h ON mlss.method_link_species_set_id = h.method_link_species_set_id LEFT JOIN species_set ss ON mlss.species_set_id = ss.species_set_id LEFT JOIN genome_db gd ON ss.genome_db_id = gd.genome_db_id
 LEFT JOIN homology_member hm ON h.homology_id = hm.homology_id LEFT JOIN gene_member gm ON hm.gene_member_id = gm.gene_member_id LEFT JOIN genome_db gdb ON gdb.genome_db_id = gm.genome_db_id WHERE ml.type = "ENSEMBL_ORTHOLOGUES" AND h.description = "ortholog_one2one" AND gd.assembly = "GRCh38" AND h.is_high_confidence = 1 AND mlss.name = "Hsap-Ptro orthologues" LIMIT 20;
 ```
@@ -46,7 +46,7 @@ LEFT JOIN homology_member hm ON h.homology_id = hm.homology_id LEFT JOIN gene_me
 | http://ensembl.org/homo_sapiens/Gene/Summary?db=core;g=ENSG00000166128       | ENSG00000166128    | coding        | RAB8B         |      100 |     100 |      100 |
 
 ### Human-Rabbit
-```
+```mysql
 SELECT CONCAT("http://ensembl.org/", gdb.name, "/Gene/Summary?db=core;g=", gm.stable_id) AS URL, gm.stable_id, gm.biotype_group, gm.display_label, hm.perc_cov, hm.perc_id, hm.perc_pos FROM method_link ml LEFT JOIN method_link_species_set mlss ON ml.method_link_id = mlss.method_link_id LEFT JOIN homology h ON mlss.method_link_species_set_id = h.method_link_species_set_id LEFT JOIN species_set ss ON mlss.species_set_id = ss.species_set_id LEFT JOIN genome_db gd ON ss.genome_db_id = gd.genome_db_id
 LEFT JOIN homology_member hm ON h.homology_id = hm.homology_id LEFT JOIN gene_member gm ON hm.gene_member_id = gm.gene_member_id LEFT JOIN genome_db gdb ON gdb.genome_db_id = gm.genome_db_id WHERE ml.type = "ENSEMBL_ORTHOLOGUES" AND h.description = "ortholog_one2one" AND gd.assembly = "GRCh38" AND h.is_high_confidence = 1 AND mlss.name = "Hsap-Ocun orthologues" LIMIT 20;
 ```
@@ -75,15 +75,15 @@ LEFT JOIN homology_member hm ON h.homology_id = hm.homology_id LEFT JOIN gene_me
 
 ## Data
 For each species there is three files in the data directory
-### <species>_orthologues.lst
+### \<species\>_orthologues.lst
 This is the list of gene stable and the name associated with the gene, the delimiter is "\t"
 
-### <species>_five_prime.lst
+### \<species\>_five_prime.lst
 This is the list of genes which are on the five prime end of the orthologue considering the forward strand. If the gene is on the reverse strand, it will be the biogical three prime end. The advantage of doing this is that the five prime end gene is always on the left on the orthologue when looking in Ensembl.
 
 The list is ordered based on <species>_orthologues.lst
 
-### <species>_three_prime.lst
+### \<species\>_three_prime.lst
 This is the list of genes which are on the three prime end of the orthologue considering the forward strand. If the gene is on the reverse strand, it will be the biogical five prime end. The advantage of doing this is that the three prime end gene is always on the right on the orthologue when looking in Ensembl.
 
 The list is ordered based on <species>_orthologues.lst
