@@ -14,15 +14,9 @@ export DATA_DIR_IN=/nfs/production/panda/ensembl/kbillis/machine_learning_projec
 export ENSCODE=/nfs/production/panda/ensembl/kbillis/enscode_2020_08/enscode/
 
 # get genomes:
-# wget ftp://ftp.ensembl.org/pub/release-102/fasta/pan_troglodytes/dna/Pan_troglodytes.Pan_tro_3.0.dna.toplevel.fa.gz
-# or:
+wget ftp://ftp.ensembl.org/pub/release-102/fasta/pan_troglodytes/dna/Pan_troglodytes.Pan_tro_3.0.dna.toplevel.fa.gz
+#or:
 
-# m1 pan_troglodytes_core_101_3 -NB  -e 'select version from coord_system where rank = 1 '
-# Pan_tro_3.0
-# m1 oryctolagus_cuniculus_core_103_2 -NB  -e 'select version from coord_system where rank = 1 '
-# OryCun2.0
-# m1 homo_sapiens_core_103_38  -NB  -e 'select version from coord_system where rank = 1 '
-# GRCh38
 
 # Done that (uncomment if nesecary):
 perl $ENSCODE/ensembl-analysis/scripts/sequence_dump.pl $(mysql-ens-mirror-1 details -script_db) -dbname pan_troglodytes_core_101_3 -toplevel -onefile -filename $GENOMES_DIR/chimpanzee_softmasked.fa -mask -softmask -mask_repeat dust -mask_repeat repeatmask_repbase_primates -coord_system_name Pan_tro_3.0
@@ -31,8 +25,7 @@ perl $ENSCODE/ensembl-analysis/scripts/sequence_dump.pl $(mysql-ens-mirror-1 det
 
 
 # genomes will be:
-# ls -l /hps/nobackup2/production/ensembl/genebuild/production/gene-locus-identification/genomes/
-# Homo_sapiens.GRCh38.dna.alt.fa                   Oryctolagus_cuniculus.OryCun2.0.dna.toplevel.fa  Pan_troglodytes.Pan_tro_3.0.dna.toplevel.fa
+ls -l /hps/nobackup2/production/ensembl/genebuild/production/gene-locus-identification/genomes/
 
 # get seq data:
 python /nfs/production/panda/ensembl/kbillis/machine_learning_projects/Gene_Locus_Identification/code/gene_locus_identification/gene_locus_identification/fetch_gene_seq.py   -i /nfs/production/panda/ensembl/kbillis/machine_learning_projects/Gene_Locus_Identification/code/gene_locus_identification/data/human_orthologues.csv   -o /hps/nobackup2/production/ensembl/genebuild/production/gene-locus-identification/kbillis/test1/human_genes.fa
